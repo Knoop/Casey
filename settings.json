@@ -1,0 +1,12 @@
+{
+	"version":
+		"0.1",
+	"communication.port": {
+			"type":"i", 
+			"value":7297	
+		}, 
+	"permission.config.file": {
+			"type":"s", 
+			"value":"config/permissions.config"
+		},	
+}
