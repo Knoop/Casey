@@ -1,6 +1,8 @@
-package com.knoop.casa;
+package com.knoop.casey;
 
 import com.yarmis.core.Yarmis;
+import com.yarmis.core.logging.Log;
+import com.yarmis.core.logging.SystemLogWriter;
 
 import java.io.IOException;
 import java.util.HashSet;
@@ -11,8 +13,9 @@ import java.util.Set;
  */
 public class Casey {
 
-    private Yarmis yarmis;
 
+    public Yarmis yarmis;
+    public DeviceManager devices;
     private Set<OnStateChangeListener> listeners = new HashSet<>();
 
 
@@ -21,7 +24,7 @@ public class Casey {
      *
      * @param args The parameters to start the instance with.
      */
-    private Casey(String[] args) {
+    public Casey(String... args) {
 
         Exception failure = null;
 
@@ -38,10 +41,28 @@ public class Casey {
 
     }
 
+    public static void main(String... args) throws InterruptedException {
+
+        Log.registerWriter(new SystemLogWriter());
+        Log.d("Casey", "Starting");
+        new Casey(args);
+
+    }
 
     private void start() throws Exception {
+        // Initialize
         this.yarmis = Yarmis.initialize().build();
+
+
+        // Register translators
+        //this.yarmis.communication().communication().registerDataType("socket", SocketDevice.class, new SocketTranslator());
+        //this.yarmis.communication().communication().registerDataType("device", Device.class, new DeviceTranslator());
+
+        this.devices = new DeviceManager(this);
+
+        // Start hosting
         this.yarmis.connection().startHosting();
+
 
     }
 
@@ -62,7 +83,6 @@ public class Casey {
         for (OnStateChangeListener listener : this.listeners)
             listener.onFailedStart(e);
     }
-
 
     /**
      * Stops the applications. Fully exits it after having stopped yarmis. Will notify all listeners that it is stopping
@@ -87,20 +107,12 @@ public class Casey {
             listener.onStop();
     }
 
-
-    public static void main(String[] args) {
-        if (instance == null)
-            Casey.instance = new Casey(args);
-        else
-            instance.command(args);
-    }
-
     /**
      * Perform the command that is indicated in the given parameters.
      *
      * @param args The command to execute.
      */
-    private void command(String[] args) {
+    private void command(String... args) {
 
 
     }
@@ -132,8 +144,4 @@ public class Casey {
         }
 
     }
-
-    static Casey instance;
-
-
 }
