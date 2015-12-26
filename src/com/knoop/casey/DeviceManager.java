@@ -3,16 +3,16 @@ package com.knoop.casey;
 import com.knoop.casey.modules.DeviceManagerModule;
 
 import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Set;
+import java.util.Map;
 
 /**
  * Created by Maurice on 23-12-2015.
  */
 public class DeviceManager implements DeviceManagerModule {
 
-    private Set<Device> devices = new HashSet<>();
+    private Map<String, Device> devices = new HashMap<>();
 
     private int counter = 0;
 
@@ -32,14 +32,14 @@ public class DeviceManager implements DeviceManagerModule {
     public Device makeDevice() {
         String identifier = this.createIdentifier();
         Device device = new Device(identifier);
-        this.devices.add(device);
+        this.devices.put(identifier, device);
 
         return device;
     }
 
     @Override
     public List<Device> getDevices() {
-        return new ArrayList<>(this.devices);
+        return new ArrayList<>(this.devices.values());
     }
 
     public Device getDevice(String identifier) {
@@ -47,7 +47,7 @@ public class DeviceManager implements DeviceManagerModule {
     }
 
     public boolean exists(String identifier) {
-        return this.devices.contains(identifier);
+        return this.devices.containsKey(identifier);
     }
 
 
