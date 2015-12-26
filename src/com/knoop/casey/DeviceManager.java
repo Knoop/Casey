@@ -1,5 +1,6 @@
 package com.knoop.casey;
 
+import com.knoop.casey.exceptions.UnknownDeviceException;
 import com.knoop.casey.modules.DeviceManagerModule;
 
 import java.util.ArrayList;
@@ -43,7 +44,10 @@ public class DeviceManager implements DeviceManagerModule {
     }
 
     public Device getDevice(String identifier) {
-        return (Device) casey.yarmis.modules().getModule(identifier);
+        if (this.exists(identifier))
+            return (Device) casey.yarmis.modules().getModule(identifier);
+        else
+            throw new UnknownDeviceException(identifier);
     }
 
     public boolean exists(String identifier) {
@@ -60,4 +64,5 @@ public class DeviceManager implements DeviceManagerModule {
         casey.yarmis.modules().unregister(casey.yarmis.modules().getModule(identifier));
         return true;
     }
+
 }

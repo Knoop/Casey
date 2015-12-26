@@ -1,5 +1,6 @@
 package com.knoop.casey;
 
+import com.knoop.casey.exceptions.UnknownSocketException;
 import com.knoop.casey.modules.DeviceManagerModule;
 import com.knoop.casey.modules.SocketManagerModule;
 
@@ -45,7 +46,11 @@ public class SocketManager implements SocketManagerModule {
     }
 
     public Socket getSocket(String identifier) {
-        return (Socket) casey.yarmis.modules().getModule(identifier);
+
+        if (this.exists(identifier))
+            return (Socket) casey.yarmis.modules().getModule(identifier);
+        else
+            throw new UnknownSocketException(identifier);
     }
 
     public boolean exists(String identifier) {
